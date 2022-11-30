@@ -5,23 +5,23 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_executable(actions_test main.cpp)
 
-find_package(Python COMPONENTS Interpreter)
+message("Python venv: $ENV{PYTHON_VENV}")
 
-if (Python_FOUND)
-    message("Default python interpreter: ${Python_EXECUTABLE}")
-    set(venv ${CMAKE_BINARY_DIR}/.venv)
+find_package(Python COMPONENTS Interpreter REQUIRED)
+message("Default python interpreter: ${Python_EXECUTABLE}")
 
-    if (NOT EXISTS ${venv})
-        message("Creating virtual environment at ${venv}")
-        execute_process(COMMAND ${Python_EXECUTABLE} -m venv ${venv})
-    endif()
-
-    # A trick to make sure cmake uses the virtual environment we've created
-#    set(ENV{VIRTUAL_ENV} ${venv})
-    unset (Python_EXECUTABLE)
-#    set(Python_FIND_VIRTUALENV ONLY)
+if ($ENV{PYTHON_VENV} STREQUAL "")
+    set(venv ${CMAKE_SOURCE_DIR}/.venv)
+    message("Creating virtual environment at ${venv}")
+    execute_process(COMMAND ${Python_EXECUTABLE} -m venv ${venv})
+else()
+    set(venv $ENV{PYTHON_VENV})
     set(Python_ROOT_DIR ${venv}/Scripts)
-    find_package(Python COMPONENTS Interpreter REQUIRED)
-
-    message("Python interpreter: ${Python_EXECUTABLE}")
 endif()
+
+message("Using Python virtual environment: ${venv}")
+unset (Python_EXECUTABLE)
+set(Python_ROOT_DIR ${venv}/Scripts)
+find_package(Python COMPONENTS Interpreter REQUIRED)
+
+message("Python interpreter: ${Python_EXECUTABLE}")
