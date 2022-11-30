@@ -18,8 +18,8 @@ if (Python_FOUND)
 
     # A trick to make sure cmake uses the virtual environment we've created
     set(ENV{VIRTUAL_ENV} ${venv})
-    set(Python_FIND_VIRTUALENV ONLY)
     unset (Python_EXECUTABLE)
+    set(Python_FIND_VIRTUALENV ONLY)
     find_package(Python COMPONENTS Interpreter)
 
     message("Python interpreter: ${Python_EXECUTABLE}")
