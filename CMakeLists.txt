@@ -17,9 +17,10 @@ if (Python_FOUND)
     endif()
 
     # A trick to make sure cmake uses the virtual environment we've created
-    set(ENV{VIRTUAL_ENV} ${venv})
+    cmake_path(CONVERT ${venv} TO_NATIVE_PATH_LIST venv_native)
+    set(ENV{VIRTUAL_ENV} ${venv_native})
     unset (Python_EXECUTABLE)
-    set(Python_FIND_VIRTUALENV ONLY)
+    set(Python_FIND_VIRTUALENV FIRST)
     find_package(Python COMPONENTS Interpreter)
 
     message("Python interpreter: ${Python_EXECUTABLE}")
